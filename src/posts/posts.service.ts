@@ -12,7 +12,7 @@ export class PostsService {
   }
 
   findAll() {
-    return this.prismaService.post.findAll();
+    return this.prismaService.post.findMany();
   }
 
   findOne(id: string) {
