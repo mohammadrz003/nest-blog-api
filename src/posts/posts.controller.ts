@@ -6,23 +6,30 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Me } from 'src/auth/guards/me/me.guard';
+import { JwtGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { PostQueryDto } from './dto/query.dto';
+import { isEmpty } from 'src/util';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  @UseGuards(JwtGuard)
+  create(@Me() me, @Body() createPostDto: CreatePostDto) {
+    return this.postsService.create({ ...createPostDto, userId: me.id });
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Query() query: PostQueryDto) {
+    return this.postsService.findAll(isEmpty(query) ? null : query);
   }
 
   @Get(':id')

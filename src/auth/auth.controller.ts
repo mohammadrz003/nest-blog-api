@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { JwtGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { Me } from './guards/me/me.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -23,8 +24,8 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(JwtGuard)
-  profile(@Request() req) {
-    return req.user;
+  profile(@Me() me) {
+    return me;
   }
 
   @Post('register')
