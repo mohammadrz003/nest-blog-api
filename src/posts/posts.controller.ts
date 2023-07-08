@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -23,8 +24,15 @@ export class PostsController {
 
   @Post()
   @UseGuards(JwtGuard)
-  create(@Me() me, @Body() createPostDto: CreatePostDto) {
-    return this.postsService.create({ ...createPostDto, userId: me.id });
+  create(@Me() { id, email }, @Body() createPostDto: CreatePostDto) {
+    const categories = createPostDto.categories?.map((category) => ({
+      id: category,
+    }));
+    return this.postsService.create({
+      ...createPostDto,
+      author: { connect: { id: id } },
+      categories: { connect: categories },
+    });
   }
 
   @Get()
@@ -39,10 +47,17 @@ export class PostsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(id, updatePostDto);
+    const categories = updatePostDto.categories?.map((category) => ({
+      id: category,
+    }));
+    return this.postsService.update(id, {
+      ...updatePostDto,
+      categories: { set: categories },
+    });
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id') id: string) {
     return this.postsService.remove(id);
   }
