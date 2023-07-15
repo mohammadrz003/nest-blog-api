@@ -14,13 +14,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserQueryDto } from './dto/query.dto';
 import { isEmpty } from '../util';
+import { HashPassPipe } from './pipe/hash-pass/hash-pass.pipe';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body(HashPassPipe) createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
