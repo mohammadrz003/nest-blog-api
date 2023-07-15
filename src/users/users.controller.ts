@@ -13,7 +13,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserQueryDto } from './dto/query.dto';
-import { isEmpty } from '../util';
+import { Util } from '../util';
 import { HashPassPipe } from './pipe/hash-pass/hash-pass.pipe';
 
 @Controller('users')
@@ -21,13 +21,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body(HashPassPipe) createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body(HashPassPipe) createUserDto: CreateUserDto) {
+    const user = await this.usersService.create(createUserDto);
+    return Util.exclude(user, 'password');
   }
 
   @Get()
   findAll(@Query() query: UserQueryDto) {
-    return this.usersService.findAll(isEmpty(query) ? null : query);
+    return this.usersService.findAll(Util.isEmpty(query) ? null : query);
   }
 
   @Get(':id')

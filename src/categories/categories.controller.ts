@@ -13,7 +13,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryQueryDto } from './dto/query.dto';
-import { isEmpty } from 'src/util';
+import { Util } from 'src/util';
 
 @Controller('categories')
 export class CategoriesController {
@@ -26,7 +26,7 @@ export class CategoriesController {
 
   @Get()
   findAll(@Query() query: CategoryQueryDto) {
-    return this.categoriesService.findAll(isEmpty(query) ? null : query);
+    return this.categoriesService.findAll(Util.isEmpty(query) ? null : query);
   }
 
   @Get(':id')

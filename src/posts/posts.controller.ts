@@ -16,7 +16,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Me } from 'src/auth/guards/me/me.guard';
 import { JwtGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { PostQueryDto } from './dto/query.dto';
-import { isEmpty } from 'src/util';
+import { Util } from 'src/util';
 
 @Controller('posts')
 export class PostsController {
@@ -37,7 +37,7 @@ export class PostsController {
 
   @Get()
   findAll(@Query() query: PostQueryDto) {
-    return this.postsService.findAll(isEmpty(query) ? null : query);
+    return this.postsService.findAll(Util.isEmpty(query) ? null : query);
   }
 
   @Get(':id')
