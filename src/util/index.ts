@@ -14,7 +14,6 @@ export class Util {
         delete data[key];
       }
     }
-    console.log(data);
     return data;
   }
 
