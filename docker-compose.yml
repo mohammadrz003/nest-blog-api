@@ -1,25 +1,33 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  mysql:
-    image: mysql:5.7
-    container_name: mysql
-    restart: always
-    environment: 
-      MYSQL_ROOT_PASSWORD: test
-    ports:
-      - '3307:3306'
+    api:
+      build: 
+          dockerfile: Dockerfile
+          context: .
+      depends_on:
+          - mysql
+      environment:
+          DATABASE_URL: ${DATABASE_URL}
+          NODE_ENV: development
+          PORT: 3000
+      ports: 
+          - "5000:3000"
 
-  postgres:
-    image: postgres:13.1
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: test
-    ports:
-      - 5432:5432
+    mysql:
+      image: mysql:5.7
+      restart: always
+      environment: 
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: nest-blog
+      ports:
+        - '3307:3306'
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+    postgres:
+      image: postgres:13.1
+      ports:
+          - "35000:5432"
+      environment:
+          POSTGRES_USER: ${POSTGRES_USER}
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+          POSTGRESS_DB: nest-blog
