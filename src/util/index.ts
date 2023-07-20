@@ -1,8 +1,5 @@
 export class Util {
-  static exclude(
-    data: object[] | object,
-    ...keys: string[]
-  ): object[] | object {
+  static exclude(data: any[] | any, ...keys: string[]) {
     if (Array.isArray(data)) {
       for (const obj of data) {
         for (const key of keys) {

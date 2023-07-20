@@ -10,7 +10,9 @@ export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-    return await this.prismaService.user.create({ data: createUserDto });
+    return await this.prismaService.user.create({
+      data: createUserDto,
+    });
   }
 
   async findAll(query?: Prisma.UserInclude) {
@@ -25,7 +27,10 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    const user = await this.prismaService.user.findUnique({ where: { id } });
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      include: { roles: true },
+    });
     return Util.exclude(user, 'password');
   }
 
