@@ -10,6 +10,7 @@ import {
   Query,
   HttpCode,
 } from '@nestjs/common';
+import { ACGuard, UseRoles, UserRoles } from 'nest-access-control';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -17,6 +18,7 @@ import { Me } from 'src/auth/guards/me/me.guard';
 import { JwtGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { PostQueryDto } from './dto/query.dto';
 import { Util } from 'src/util';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -35,6 +37,12 @@ export class PostsController {
     });
   }
 
+  @UseGuards(JwtGuard, AuthGuard, ACGuard)
+  @UseRoles({
+    resource: 'post',
+    action: 'read',
+    possession: 'own',
+  })
   @Get()
   findAll(@Query() query: PostQueryDto) {
     return this.postsService.findAll(Util.isEmpty(query) ? null : query);

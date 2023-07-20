@@ -8,5 +8,6 @@ import { UsersModule } from 'src/users/users.module';
   imports: [AuthModule, forwardRef(() => UsersModule)],
   controllers: [RolesController],
   providers: [RolesService],
+  exports: [RolesService],
 })
 export class RolesModule {}

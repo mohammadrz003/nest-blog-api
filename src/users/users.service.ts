@@ -29,7 +29,7 @@ export class UsersService {
   async findOne(id: string) {
     const user = await this.prismaService.user.findUnique({
       where: { id },
-      include: { roles: true },
+      include: { roles: { select: { name: true } } },
     });
     return Util.exclude(user, 'password');
   }
