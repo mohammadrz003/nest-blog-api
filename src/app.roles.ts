@@ -6,9 +6,9 @@ export enum AppRoles {
 export const roles: RolesBuilder = new RolesBuilder();
 roles
   .grant(AppRoles.user) // define new or modify existing role. also takes an array.
-  .readAny('post')
+  .readOwn('post')
   .grant(AppRoles.admin) // switch to another role without breaking the chain
-  .extend(AppRoles.user) // inherit role capabilities. also takes an array
+  .readAny('post') // inherit role capabilities. also takes an array
   .createAny('post')
   .updateAny('post', ['title']) // explicitly defined attributes
   .deleteAny('post');

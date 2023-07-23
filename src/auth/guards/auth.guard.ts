@@ -23,8 +23,8 @@ export class AuthGuard implements CanActivate {
 
     try {
       const userFromDB = await this.userSerive.findOne(user.id);
-      const roles = userFromDB.roles.map((role) => role.name);
-      userFromDB.roles = roles;
+      const role = userFromDB.role.name;
+      userFromDB.role = role;
       request.user = userFromDB;
       return true;
     } catch (error) {

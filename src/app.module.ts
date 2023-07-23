@@ -35,23 +35,37 @@ export class AppModule implements OnModuleInit {
     const totalUser = await this.appService.getTotalUser();
     if (totalUser === 0) {
       await this.prismaService.role.deleteMany();
-      const adminRole = await this.roleService.create({ name: 'admin' });
-      await this.roleService.create({ name: 'user' });
-
       // hash the password
       const saltOrRounds = 10;
       const password = process.env.ADMIN_PASSWORD;
       const hash = await bcrypt.hash(password, saltOrRounds);
-      await this.prismaService.user.create({
+      const adminRole = await this.roleService.create({
+        name: 'admin',
+      });
+      const userRole = await this.roleService.create({
+        name: 'user',
+      });
+      const adminUser = await this.prismaService.user.create({
         data: {
           name: process.env.ADMIN_USERNAME,
           email: process.env.ADMIN_EMAIL,
           password: hash,
-          roles: {
-            connect: [{ id: adminRole.id }],
+          role: {
+            connect: { id: adminRole.id },
           },
         },
       });
+      const roles = [adminRole, userRole];
+      for (const role of roles) {
+        await this.prismaService.role.update({
+          where: { id: role.id },
+          data: {
+            author: {
+              connect: { id: adminUser.id },
+            },
+          },
+        });
+      }
     }
   }
 }

@@ -30,6 +30,11 @@ export class AuthController {
 
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.registerUser(createUserDto);
+    return this.authService.registerUser({
+      ...createUserDto,
+      role: {
+        connectOrCreate: { where: { name: 'user' }, create: { name: 'user' } },
+      },
+    });
   }
 }

@@ -11,19 +11,20 @@ import {
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { HasRoles } from 'src/auth/decorator/roles.decorator';
+import { Me } from 'src/auth/guards/me/me.guard';
 import { JwtGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()
-  @HasRoles('Admin')
-  @UseGuards(JwtGuard, RolesGuard)
-  create(@Body() createRoleDto: CreateRoleDto) {
-    return this.rolesService.create(createRoleDto);
+  @UseGuards(JwtGuard)
+  create(@Me() { id }, @Body() createRoleDto: CreateRoleDto) {
+    return this.rolesService.create({
+      ...createRoleDto,
+      author: { connect: { id } },
+    });
   }
 
   @Get()
