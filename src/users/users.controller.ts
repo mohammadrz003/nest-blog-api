@@ -27,7 +27,7 @@ export class UsersController {
     const user = await this.usersService.create({
       ...createUserDto,
       role: {
-        connectOrCreate: { where: { name: 'user' }, create: { name: 'user' } },
+        connectOrCreate: { where: { role: 'user' }, create: { role: 'user' } },
       },
     });
     return Util.exclude(user, 'password');

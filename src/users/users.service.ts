@@ -27,7 +27,7 @@ export class UsersService {
   async findOne(id: string) {
     const user = await this.prismaService.user.findUnique({
       where: { id },
-      include: { role: { select: { name: true } } },
+      include: { role: { select: { role: true } } },
     });
     return Util.exclude(user, 'password');
   }

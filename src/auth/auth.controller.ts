@@ -33,7 +33,7 @@ export class AuthController {
     return this.authService.registerUser({
       ...createUserDto,
       role: {
-        connectOrCreate: { where: { name: 'user' }, create: { name: 'user' } },
+        connectOrCreate: { where: { role: 'user' }, create: { role: 'user' } },
       },
     });
   }

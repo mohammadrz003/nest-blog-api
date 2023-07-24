@@ -16,10 +16,10 @@ export class RolesService {
     return this.prismaService.role.findMany();
   }
 
-  findRoleByTitle(name: string) {
+  findRoleByTitle(role: string) {
     return this.prismaService.role.findUnique({
       where: {
-        name,
+        role,
       },
     });
   }

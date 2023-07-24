@@ -11,7 +11,6 @@ import {
   HttpCode,
   Req,
 } from '@nestjs/common';
-import { UseRoles, UserRoles } from 'nest-access-control';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -21,6 +20,7 @@ import { PostQueryDto } from './dto/query.dto';
 import { Util } from 'src/util';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AccessGuard } from 'src/auth/guards/access.guard';
+import { HasRoles } from 'src/auth/decorator/roles.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -40,10 +40,11 @@ export class PostsController {
   }
 
   @UseGuards(JwtGuard, AuthGuard, AccessGuard)
-  @UseRoles({
+  @HasRoles({
     resource: 'post',
     action: 'read',
     possession: 'own',
+    tableName: 'post',
   })
   @Get()
   findAll(@Me() user, @Query() query: PostQueryDto) {

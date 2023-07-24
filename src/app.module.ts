@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 import { RolesService } from './roles/roles.service';
 import { roles } from './app.roles';
 import { PrismaService } from './prisma/prisma.service';
+import { GrantsModule } from './grants/grants.module';
 import * as bcrypt from 'bcrypt';
 
 @Module({
@@ -21,6 +22,7 @@ import * as bcrypt from 'bcrypt';
     AuthModule,
     RolesModule,
     AccessControlModule.forRoles(roles),
+    GrantsModule,
   ],
   providers: [AppService],
 })
@@ -40,10 +42,10 @@ export class AppModule implements OnModuleInit {
       const password = process.env.ADMIN_PASSWORD;
       const hash = await bcrypt.hash(password, saltOrRounds);
       const adminRole = await this.roleService.create({
-        name: 'admin',
+        role: 'admin',
       });
       const userRole = await this.roleService.create({
-        name: 'user',
+        role: 'user',
       });
       const adminUser = await this.prismaService.user.create({
         data: {

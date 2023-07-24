@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { InjectRolesBuilder, RolesBuilder } from 'nest-access-control';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Role } from '../interface/role.interface';
 
 @Injectable()
 export class AccessGuard implements CanActivate {
@@ -11,27 +12,34 @@ export class AccessGuard implements CanActivate {
     private prismaService: PrismaService,
   ) {}
 
-  identifyAction(action: string): string {
+  identifyAction(action: string, type: 'own' | 'any'): string {
     switch (action) {
       case 'create':
-        return 'createAny';
+        return type === 'any' ? 'createAny' : 'createOwn';
       case 'read':
-        return 'readAny';
+        return type === 'any' ? 'readAny' : 'readOwn';
       case 'update':
-        return 'updateAny';
+        return type === 'any' ? 'updateAny' : 'updateOwn';
       case 'delete':
-        return 'deleteAny';
+        return type === 'any' ? 'deleteAny' : 'deleteOwn';
       default:
         return action;
     }
   }
 
-  async getResourceOwner(request, resource: string): Promise<boolean> {
-    const user = request.user.id;
-    const resourceOwner = await this.prismaService[resource].findFirst({
-      where: { userId: user },
-    });
-    return Boolean(resourceOwner);
+  async getResourceOwner(
+    request,
+    resource: string,
+    action: Role['action'],
+  ): Promise<boolean> {
+    if (action !== 'read') {
+      const user = request.user.id;
+      const resourceOwner = await this.prismaService[resource].findFirst({
+        where: { userId: user },
+      });
+      return Boolean(resourceOwner);
+    }
+    return true;
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -48,14 +56,16 @@ export class AccessGuard implements CanActivate {
 
     const role = request.user.role;
 
-    const hasUserPost = await this.getResourceOwner(
-      request,
-      permissionRequirements[0].resource,
-    );
-
     const action = permissionRequirements[0].action;
     const resource = permissionRequirements[0].resource;
     const possession = permissionRequirements[0].possession;
+    const tableName = permissionRequirements[0].tableName;
+
+    const hasUserPost = await this.getResourceOwner(
+      request,
+      tableName || resource,
+      action,
+    );
 
     const roleAccess = this.roleBuilder.permission({
       role,
@@ -68,14 +78,14 @@ export class AccessGuard implements CanActivate {
 
     if (
       hasUserPost &&
-      this.roleBuilder.can(role)[this.identifyAction(action)](resource)
+      this.roleBuilder.can(role)[this.identifyAction(action, 'own')](resource)
         .granted &&
       roleAccess.granted
     ) {
       request.user.possession = 'own';
       shouldPass = true;
     } else if (
-      this.roleBuilder.can(role)[this.identifyAction(action)](resource)
+      this.roleBuilder.can(role)[this.identifyAction(action, 'any')](resource)
         .granted &&
       roleAccess.granted
     ) {

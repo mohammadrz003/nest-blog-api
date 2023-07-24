@@ -4,5 +4,5 @@ export class CreateRoleDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
-  name: string;
+  role: string;
 }
