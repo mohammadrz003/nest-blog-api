@@ -21,4 +21,19 @@ export class Util {
       Object.getPrototypeOf(obj) === Object.prototype
     );
   }
+
+  static formatRoles(roles: any[]) {
+    const formattedRoles = [];
+    for (const role of roles) {
+      for (const grant of role.grants) {
+        formattedRoles.push({
+          role: role.role,
+          resource: grant.resource,
+          action: grant.action,
+          attributes: grant.attributes,
+        });
+      }
+    }
+    return formattedRoles;
+  }
 }

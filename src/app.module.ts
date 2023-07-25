@@ -1,5 +1,9 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { AccessControlModule } from 'nest-access-control';
+import {
+  AccessControlModule,
+  RolesBuilder,
+  InjectRolesBuilder,
+} from 'nest-access-control';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -8,10 +12,11 @@ import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
 import { AppService } from './app.service';
 import { RolesService } from './roles/roles.service';
-import { roles } from './app.roles';
 import { PrismaService } from './prisma/prisma.service';
 import { GrantsModule } from './grants/grants.module';
 import * as bcrypt from 'bcrypt';
+import { getInitialGrants } from './constants';
+import { Util } from './util';
 
 @Module({
   imports: [
@@ -21,8 +26,19 @@ import * as bcrypt from 'bcrypt';
     PostsModule,
     AuthModule,
     RolesModule,
-    AccessControlModule.forRoles(roles),
     GrantsModule,
+    AccessControlModule.forRootAsync({
+      imports: [RolesModule],
+      inject: [RolesService],
+      useFactory: async (roleService: RolesService): Promise<RolesBuilder> => {
+        const roles = await roleService.findAll({ grants: true });
+        const formattedRoles = Util.formatRoles(roles);
+        if (formattedRoles.length === 0) {
+          return new RolesBuilder();
+        }
+        return new RolesBuilder(formattedRoles);
+      },
+    }),
   ],
   providers: [AppService],
 })
@@ -31,6 +47,7 @@ export class AppModule implements OnModuleInit {
     private appService: AppService,
     private roleService: RolesService,
     private prismaService: PrismaService,
+    @InjectRolesBuilder() private readonly rolesBuilder: RolesBuilder,
   ) {}
 
   async onModuleInit() {
@@ -67,6 +84,16 @@ export class AppModule implements OnModuleInit {
             },
           },
         });
+      }
+      const initialGrants = getInitialGrants(adminRole.id, adminUser.id);
+      await this.prismaService.grant.createMany({
+        data: [...initialGrants],
+      });
+
+      const rolesFromDB = await this.roleService.findAll({ grants: true });
+      const formattedRoles = Util.formatRoles(rolesFromDB);
+      if (formattedRoles.length !== 0) {
+        this.rolesBuilder.setGrants(formattedRoles);
       }
     }
   }

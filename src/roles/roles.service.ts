@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Prisma } from '@prisma/client';
 
@@ -12,8 +11,8 @@ export class RolesService {
     return this.prismaService.role.create({ data: createRoleDto });
   }
 
-  findAll() {
-    return this.prismaService.role.findMany();
+  findAll(query?: Prisma.RoleInclude) {
+    return this.prismaService.role.findMany({ include: query });
   }
 
   findRoleByTitle(role: string) {

@@ -60,7 +60,7 @@ roles
   .grant(Roles.user)
   .readOwn(RESOURCE.post)
   .grant(Roles.admin)
-  .readOwn(RESOURCE.post)
+  .readAny(RESOURCE.post)
   .createAny(RESOURCE.post)
   .updateAny(RESOURCE.post)
   .deleteAny(RESOURCE.post);
