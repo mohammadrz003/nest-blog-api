@@ -1,0 +1,102 @@
+[
+  {
+    "resource": "post",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "post",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "post",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "post",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "category",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "category",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "category",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "category",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "user",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "user",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "user",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "user",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "role",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "role",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "role",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "role",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "grant",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "grant",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "grant",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "resource": "grant",
+    "action": "delete:any",
+    "attributes": "*"
+  }
+]

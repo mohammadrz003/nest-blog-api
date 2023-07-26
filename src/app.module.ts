@@ -15,9 +15,9 @@ import { RolesService } from './roles/roles.service';
 import { PrismaService } from './prisma/prisma.service';
 import { GrantsModule } from './grants/grants.module';
 import * as bcrypt from 'bcrypt';
-import { getInitialGrants } from './constants';
 import { Util } from './util';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SeedGrantData } from './database/seeds/grants/grants.seed';
 
 @Module({
   imports: [
@@ -87,7 +87,10 @@ export class AppModule implements OnModuleInit {
           },
         });
       }
-      const initialGrants = getInitialGrants(adminRole.id, adminUser.id);
+      const initialGrants = SeedGrantData.seedGrants(
+        adminRole.id,
+        adminUser.id,
+      );
       await this.prismaService.grant.createMany({
         data: [...initialGrants],
       });

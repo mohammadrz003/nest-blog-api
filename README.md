@@ -1,73 +1,101 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## توضیحات پروژه
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+این پروژه، یک پروژه تمرینی برای یادگیری فریم ورک [NestJs](nestjs.com) است و هدف از ساخت این پروژه، ساخت یک API برای یک بلاگ بود.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+تقریبا تمام ویژگی هایی که از یک بلاگ ساده انتظار میرود در این پروژه پیاده سازی شده است و همچنین تا جایی که ممکن بود سعی شده نکات امنیتی مربوط به بک‌اند در این پروژه رعایت شود.
 
-## Description
+## [Documentation](https://64c100e52dd7a65c3baac365--startling-cajeta-e7e08d.netlify.app/)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ ویژگی ها
 
-## Installation
+- سیستم Authentication و Authorizatoin
 
-```bash
-$ yarn install
+- دریافت اطلاعات مقاله ها همراه با دسته بندی های مربوطه و اطلاعات نویسنده آن
+
+- داشتن سیسستم RBAC برای کنترل بیشتر بر نقش ها و دسترسی های مختلف
+
+- رعایت کردن best practice ها و داشتن کدی بهینه
+
+## ⚒️ ساخته شده با:
+
+- [NestJs](nestjs.com) - یک چارچوب پیشرو Node.js برای ساخت برنامه‌های کاربردی، قابل اعتماد و مقیاس‌پذیر.
+
+- [Prisma](https://www.prisma.io/) - Prisma سطح جدیدی از تجربه توسعه دهندگان را هنگام کار با پایگاه داده فراهم میکند
+
+- [AccessControl](https://github.com/onury/accesscontrol) - کنترل دسترسی مبتنی بر نقش و ویژگی برای Node.js
+
+- [Typescript](https://www.typescriptlang.org/) - TypeScript یک زبان برنامه نویسی استاتیک تایپ است که بر اساس جاوا اسکریپت ساخته شده است
+
+## 💽 نحوه اجرای پروژه
+
+### # مرحله ۱:
+
+ابتدا باید یک فایل به نام `.env` در روت پروژه ساخته شود و پس از آن، متغیر هایی که در فایل ‍‍‍`.env.example` مشخص شده است را با مقادیر مناسب پر کنید
+
+یک مثال واقعی از مقدار هایی که میتوان در فایل ‍‍‍‍`.env` وجود داشته باشد در زیر آمده است:
+
+```
+MYSQL_ROOT_PASSWORD = test
+
+POSTGRES_USER = root
+
+POSTGRES_PASSWORD = test
+
+DATABASE_URL = mysql://root:test@localhost:3307/nest-blog?connect_timeout=300
+
+
+ADMIN_USERNAME = admin
+
+ADMIN_EMAIL = example@example.com
+
+ADMIN_PASSWORD = 123456
 ```
 
-## Running the app
+> نکته: این مقادیر فقط برای تست هستند و شما میتوانید این مقادیر را به دلخواه خودتان تغییر دهید
 
-```bash
-# development
-$ yarn run start
+### # مرحله ۲:
 
-# watch mode
-$ yarn run start:dev
+#### راه اندازی پروژه به دو حالت مختلف تقسیم میشود
 
-# production mode
-$ yarn run start:prod
+۱- حالت توسعه
+۲- حالت پروداکشن
+
+**برای حالت توسعه نیاز است که بخش api از فایل `docker-compose.yml` همانگونه که در زیر مشخص شده است کامنت شود.
+اما برای حالت پروداکشن نیازی به کامنت کردن این بخش نیست**‍‍‍‍‍‍
+
+```
+services:
+    # api:
+    #   build:
+    #      dockerfile: Dockerfile
+    #      context:
+    #   depends_on:
+    #      - mysql
+    #   environment:
+    #      DATABASE_URL: ${DATABASE_URL}
+    #      NODE_ENV: development
+    #      PORT: 3000
+    #   ports:
+    #      - "5000:3000"
 ```
 
-## Test
+### # مرحله ۳:
 
-```bash
-# unit tests
-$ yarn run test
+حال میتوانیم با اجرا کردن دستور `docker-compose up` در ترمینال خود در حالی که در روت پروژه خود قرار داریم پروژه را ران کنیم.
 
-# e2e tests
-$ yarn run test:e2e
+### # مرحله ۴:
 
-# test coverage
-$ yarn run test:cov
-```
+اگر حالت پروداکشن را انتخاب نمودید و بخش api را از فایل `docker-compose.yml` کامنت نکردید ، میتوانید این مرحله را نادیده بگیرید.
+در غیر این صورت نیاز است که ترمینال دیگری در روت پروژه خود باز کنید و دستور `yarn start:dev` را اجرا کنید.
 
-## Support
+## با من در ارتباط باشید
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- Author - [Mohammad Rezaei](https://github.com/mohammadrz003)
 
-## Stay in touch
+- Website - [Moonfo.com](https://moonfo.com/)
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Twitter - [@mmdrz003](https://twitter.com/mmdrz003)
 
-## License
+## لایسنس
 
-Nest is [MIT licensed](LICENSE).
+[MIT license](LICENSE)
