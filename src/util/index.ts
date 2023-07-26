@@ -36,4 +36,19 @@ export class Util {
     }
     return formattedRoles;
   }
+
+  static identifyAction(action: string, type: 'own' | 'any'): string {
+    switch (action) {
+      case 'create':
+        return type === 'any' ? 'createAny' : 'createOwn';
+      case 'read':
+        return type === 'any' ? 'readAny' : 'readOwn';
+      case 'update':
+        return type === 'any' ? 'updateAny' : 'updateOwn';
+      case 'delete':
+        return type === 'any' ? 'deleteAny' : 'deleteOwn';
+      default:
+        return action;
+    }
+  }
 }

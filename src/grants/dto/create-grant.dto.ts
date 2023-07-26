@@ -1,4 +1,4 @@
-import { IsArray, IsIn, IsString, Matches, Min } from 'class-validator';
+import { IsArray, IsIn, IsString, MinLength } from 'class-validator';
 
 const actions = [
   'create:own',
@@ -14,17 +14,16 @@ export type OperateActions = (typeof actions)[number];
 
 export class CreateGrantDto {
   @IsString()
-  @Min(2)
+  @MinLength(2)
   role: string;
 
   @IsString()
-  @Min(2)
+  @MinLength(2)
   resource: string;
 
   @IsIn(actions)
   action: OperateActions;
 
-  // @Matches(/,[^ ]/)
   @IsArray()
   attributes: string[];
 }

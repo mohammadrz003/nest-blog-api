@@ -26,7 +26,7 @@ export class GrantsController {
   async create(@Body() createGrantDto: CreateGrantDto) {
     const role = await this.roleService.findRoleByTitle(createGrantDto.role);
     if (!role) {
-      throw new HttpException('Role not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('ROLE_NOT_FOUND', HttpStatus.NOT_FOUND);
     }
 
     const grantsByResource = await this.grantsService.findByResource(
@@ -73,15 +73,32 @@ export class GrantsController {
 
     const uniqueAttributes = [...new Set(createGrantDto.attributes)];
 
+    const isDuplicateAttribute = uniqueAttributes.some((attribute) => {
+      const value = attribute.startsWith('!') ? attribute.slice(1) : attribute;
+      const isAttributeDuplicated = uniqueAttributes.filter((attr) =>
+        attr.startsWith('!') ? attr.slice(1) : attr === value,
+      ).length;
+      return isAttributeDuplicated > 1;
+    });
+    if (isDuplicateAttribute) {
+      throw new HttpException(
+        'Duplicate attribute found',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const formattedAttributes = uniqueAttributes.join(', ');
 
-    return this.grantsService.create({
-      resource: createGrantDto.resource,
-      action: createGrantDto.action,
-      attributes: formattedAttributes,
-      author: { connect: { id: role.userId } },
-      role: { connect: { id: role.id } },
-    });
+    return this.grantsService.create(
+      {
+        resource: createGrantDto.resource,
+        action: createGrantDto.action,
+        attributes: formattedAttributes,
+        author: { connect: { id: role.userId } },
+        role: { connect: { id: role.id } },
+      },
+      role.role,
+    );
   }
 
   @Get()

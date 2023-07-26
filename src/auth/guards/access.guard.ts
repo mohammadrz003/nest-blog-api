@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { InjectRolesBuilder, RolesBuilder } from 'nest-access-control';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from '../interface/role.interface';
+import { Util } from 'src/util';
 
 @Injectable()
 export class AccessGuard implements CanActivate {
@@ -11,21 +12,6 @@ export class AccessGuard implements CanActivate {
     @InjectRolesBuilder() private readonly roleBuilder: RolesBuilder,
     private prismaService: PrismaService,
   ) {}
-
-  identifyAction(action: string, type: 'own' | 'any'): string {
-    switch (action) {
-      case 'create':
-        return type === 'any' ? 'createAny' : 'createOwn';
-      case 'read':
-        return type === 'any' ? 'readAny' : 'readOwn';
-      case 'update':
-        return type === 'any' ? 'updateAny' : 'updateOwn';
-      case 'delete':
-        return type === 'any' ? 'deleteAny' : 'deleteOwn';
-      default:
-        return action;
-    }
-  }
 
   async getResourceOwner(
     request,
@@ -78,14 +64,14 @@ export class AccessGuard implements CanActivate {
 
     if (
       hasUserPost &&
-      this.roleBuilder.can(role)[this.identifyAction(action, 'own')](resource)
+      this.roleBuilder.can(role)[Util.identifyAction(action, 'own')](resource)
         .granted &&
       roleAccess.granted
     ) {
       request.user.possession = 'own';
       shouldPass = true;
     } else if (
-      this.roleBuilder.can(role)[this.identifyAction(action, 'any')](resource)
+      this.roleBuilder.can(role)[Util.identifyAction(action, 'any')](resource)
         .granted &&
       roleAccess.granted
     ) {

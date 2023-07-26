@@ -17,6 +17,7 @@ import { GrantsModule } from './grants/grants.module';
 import * as bcrypt from 'bcrypt';
 import { getInitialGrants } from './constants';
 import { Util } from './util';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { Util } from './util';
     AuthModule,
     RolesModule,
     GrantsModule,
+    EventEmitterModule.forRoot(),
     AccessControlModule.forRootAsync({
       imports: [RolesModule],
       inject: [RolesService],
