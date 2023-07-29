@@ -13,8 +13,16 @@ import { GrantsService } from './grants.service';
 import { CreateGrantDto } from './dto/create-grant.dto';
 import { UpdateGrantDto } from './dto/update-grant.dto';
 import { RolesService } from 'src/roles/roles.service';
-import { ATTRIBUTES, RESOURCE } from 'src/app.roles';
+import { ATTRIBUTES, RESOURCE } from 'src/constants';
+import { Grant as GrantModel } from '@prisma/client';
 
+/**
+ * برای گرنت ها CRUD کنترلر تعریف عملیات
+ * @class GrantsController
+ * @property {GrantsService} grantsService
+ * @property {RolesService} roleService
+ * @module GrantsController
+ */
 @Controller('grants')
 export class GrantsController {
   constructor(
@@ -22,6 +30,14 @@ export class GrantsController {
     private readonly roleService: RolesService,
   ) {}
 
+  /**
+   * ایجاد گرنت جدید
+   * @param {CreateGrantDto} createGrantDto
+   * @memberof GrantsController
+   * @method create
+   * @public
+   * @returns {Promise<GrantModel>}
+   */
   @Post()
   async create(@Body() createGrantDto: CreateGrantDto) {
     const role = await this.roleService.findRoleByTitle(createGrantDto.role);
@@ -101,23 +117,57 @@ export class GrantsController {
     );
   }
 
+  /**
+   * برای دریافت تمام گرنت ها
+   * @memberof GrantsController
+   * @method findAll
+   * @public
+   * @returns {Promise<GrantModel[]>}
+   */
   @Get()
   findAll() {
     return this.grantsService.findAll();
   }
 
+  /**
+   * برای دریافت گرنت با شناسه
+   * @param {string} id
+   * @memberof GrantsController
+   * @method findOne
+   * @public
+   * @returns {Promise<GrantModel>}
+   */
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.grantsService.findOne(+id);
+    return this.grantsService.findOne(id);
   }
 
+  /**
+   * برای به روز رسانی گرنت با شناسه
+   * @param {string} id
+   * @param {UpdateGrantDto} updateGrantDto
+   * @memberof GrantsController
+   * @method update
+   * @public
+   * @returns {Promise<GrantModel>}
+   * @todo پیاده کردن منطق
+   */
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGrantDto: UpdateGrantDto) {
-    return this.grantsService.update(+id, updateGrantDto);
+    // پیاده کردن منطق...
+    throw new HttpException('NOT_IMPLEMENTED', HttpStatus.NOT_IMPLEMENTED);
   }
 
+  /**
+   * برای حذف گرنت با شناسه
+   * @param {string} id
+   * @memberof GrantsController
+   * @method remove
+   * @public
+   * @returns {Promise<void>}
+   */
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.grantsService.remove(+id);
+    return this.grantsService.remove(id);
   }
 }

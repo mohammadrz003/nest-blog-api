@@ -8,6 +8,13 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 
+/**
+ * فیلتری برای هندل کردن خطاهای احتمالی
+ * @module AllExceptionsFilter
+ * @implements {ExceptionFilter}
+ * @param {HttpAdapterHost} httpAdapterHost
+ * @returns {void}
+ */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger();
@@ -15,8 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
-    // In certain situations `httpAdapter` might not be available in the
-    // constructor method, thus we should resolve it here.
+    // در متد سازنده در دسترس نباشد ، بنابراین ما باید آن را در اینجا حل کنیم. `httpAdapter` در بعضی مواقع ممکن است که
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
@@ -36,6 +42,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message,
     };
 
+    // لاگ گرفتن از خطای ایجاد شده
     this.logger.error(
       `${message} - [${
         ctx.getRequest().method

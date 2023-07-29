@@ -3,6 +3,10 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { AuthModule } from 'src/auth/auth.module';
 
+/**
+ * ماژول کاربران
+ * @module UsersModule
+ */
 @Module({
   imports: [AuthModule],
   controllers: [UsersController],

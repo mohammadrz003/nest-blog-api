@@ -12,6 +12,14 @@ const actions = [
 ] as const;
 export type OperateActions = (typeof actions)[number];
 
+/**
+ * برای ایجاد گرنت جدید DTO
+ * @class CreateGrantDto
+ * @property {string} role
+ * @property {string} resource
+ * @property {OperateActions} action
+ * @property {string[]} attributes
+ */
 export class CreateGrantDto {
   @IsString()
   @MinLength(2)

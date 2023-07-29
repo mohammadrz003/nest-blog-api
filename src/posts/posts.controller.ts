@@ -20,11 +20,26 @@ import { Util } from 'src/util';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AccessGuard } from 'src/auth/guards/access.guard';
 import { HasRoles } from 'src/auth/decorator/roles.decorator';
+import { Post as PostModel } from '@prisma/client';
 
+/**
+ * برای پست ها CRUD کنترلر تعریف عملیات
+ * @class PostsController
+ * @property {PostsService} postsService
+ * @module PostsController
+ */
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  /**
+   * ایجاد پست جدید
+   * @param {CreatePostDto} createPostDto
+   * @memberof PostsController
+   * @method create
+   * @public
+   * @returns {Promise<PostModel>}
+   */
   @Post()
   @UseGuards(JwtGuard)
   create(@Me() { id }, @Body() createPostDto: CreatePostDto) {
@@ -38,6 +53,14 @@ export class PostsController {
     });
   }
 
+  /**
+   * دریافت تمامی پست ها
+   * @param {PostQueryDto} query
+   * @memberof PostsController
+   * @method findAll
+   * @public
+   * @returns {Promise<PostModel[]>}
+   */
   @UseGuards(JwtGuard, AuthGuard, AccessGuard)
   @HasRoles({
     resource: 'post',
@@ -50,11 +73,28 @@ export class PostsController {
     return this.postsService.findAll(Util.isEmpty(query) ? null : query);
   }
 
+  /**
+   * دریافت یک پست با شناسه
+   * @param {string} id
+   * @memberof PostsController
+   * @method findOne
+   * @public
+   * @returns {Promise<PostModel>}
+   */
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(id);
   }
 
+  /**
+   * بروزرسانی یک پست با شناسه
+   * @param {string} id
+   * @param {UpdatePostDto} updatePostDto
+   * @memberof PostsController
+   * @method update
+   * @public
+   * @returns {Promise<PostModel>}
+   */
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     const categories = updatePostDto.categories?.map((category) => ({
@@ -66,6 +106,14 @@ export class PostsController {
     });
   }
 
+  /**
+   * حذف یک پست با شناسه
+   * @param {string} id
+   * @memberof PostsController
+   * @method remove
+   * @public
+   * @returns {Promise<void>}
+   */
   @Delete(':id')
   @HttpCode(204)
   remove(@Param('id') id: string) {

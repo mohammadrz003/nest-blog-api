@@ -8,6 +8,13 @@ import {
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
+/**
+ * پایپ برای هش کردن پسورد
+ * @implements {PipeTransform}
+ * @param {CreateUserDto} value
+ * @param {ArgumentMetadata} metadata
+ * @returns {Promise<CreateUserDto>}
+ */
 @Injectable()
 export class HashPassPipe implements PipeTransform {
   async transform(value: CreateUserDto, metadata: ArgumentMetadata) {

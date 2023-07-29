@@ -44,6 +44,16 @@ import { SeedGrantData } from './database/seeds/grants/grants.seed';
   ],
   providers: [AppService],
 })
+/**
+ * ماژول اصلی برنامه
+ * @module AppModule
+ * @implements {OnModuleInit}
+ * @param {AppService} appService
+ * @param {RolesService} roleService
+ * @param {PrismaService} prismaService
+ * @param {RolesBuilder} rolesBuilder
+ * @returns {Promise<void>}
+ */
 export class AppModule implements OnModuleInit {
   constructor(
     private appService: AppService,
@@ -52,20 +62,30 @@ export class AppModule implements OnModuleInit {
     @InjectRolesBuilder() private readonly rolesBuilder: RolesBuilder,
   ) {}
 
+  /**
+   * این متد برای ایجاد ادمین و ساخت نقش ها و دسترسی های اولیه برنامه است
+   * @returns {Promise<void>}
+   * @memberof AppModule
+   * @override
+   * @implements {OnModuleInit}
+   */
   async onModuleInit() {
     const totalUser = await this.appService.getTotalUser();
+    // اگر هیچ کاربری در دیتابیس وجود نداشت، شروع به ساخت دیتای اولیه میکنیم
     if (totalUser === 0) {
       await this.prismaService.role.deleteMany();
-      // hash the password
+      // هش کردن پسورد ادمین
       const saltOrRounds = 10;
       const password = process.env.ADMIN_PASSWORD;
       const hash = await bcrypt.hash(password, saltOrRounds);
+      // ساخت رول های اولیه
       const adminRole = await this.roleService.create({
         role: 'admin',
       });
       const userRole = await this.roleService.create({
         role: 'user',
       });
+      // اختصاص دادن نقش ادمین به کاربر ادمینی که به تازگی ساخته شده است
       const adminUser = await this.prismaService.user.create({
         data: {
           name: process.env.ADMIN_USERNAME,
@@ -76,6 +96,7 @@ export class AppModule implements OnModuleInit {
           },
         },
       });
+      // مرتبط کردن رول ها با ادمین
       const roles = [adminRole, userRole];
       for (const role of roles) {
         await this.prismaService.role.update({
@@ -87,6 +108,7 @@ export class AppModule implements OnModuleInit {
           },
         });
       }
+      // ساخت دسترسی های اولیه
       const initialGrants = SeedGrantData.seedGrants(
         adminRole.id,
         adminUser.id,
@@ -95,6 +117,7 @@ export class AppModule implements OnModuleInit {
         data: [...initialGrants],
       });
 
+      // دریافت رول ها از دیتابیس و ست کردن آنها در اکسس کنترل
       const rolesFromDB = await this.roleService.findAll({ grants: true });
       const formattedRoles = Util.formatRoles(rolesFromDB);
       if (formattedRoles.length !== 0) {

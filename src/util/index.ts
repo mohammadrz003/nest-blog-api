@@ -1,4 +1,16 @@
+/**
+ * @module Util
+ * @classdesc کلاس ابزار های کاربردی
+ */
 export class Util {
+  /**
+   * این متد برای حذف کردن یک یا چند کلید از یک آبجکت یا آرایه آبجکت ها استفاده میشود
+   * @param {any[] | any} data
+   * @param {...string[]} keys
+   * @returns {any[] | any}
+   * @memberof Util
+   * @static
+   */
   static exclude(data: any[] | any, ...keys: string[]) {
     if (Array.isArray(data)) {
       for (const obj of data) {
@@ -14,6 +26,13 @@ export class Util {
     return data;
   }
 
+  /**
+   * این متد برای چک کردن اینکه آیا یک آبجکت خالی است یا خیر استفاده میشود
+   * @param {object} obj
+   * @returns {boolean}
+   * @memberof Util
+   * @static
+   */
   static isEmpty(obj: object) {
     return (
       obj &&
@@ -22,6 +41,13 @@ export class Util {
     );
   }
 
+  /**
+   * استفاده میشود، استفاده میشود AccessControl این متد برای فرمت کردن نقش ها به صورتی که برای ساخت نقش ها در کتابخانه
+   * @param {any[]} roles
+   * @returns {any[]}
+   * @memberof Util
+   * @static
+   */
   static formatRoles(roles: any[]) {
     const formattedRoles = [];
     for (const role of roles) {
@@ -37,6 +63,14 @@ export class Util {
     return formattedRoles;
   }
 
+  /**
+   * استفاده میشود AccessControl این متد برای تبدیل کردن اکشن های اصلی به اکشن های موجود در کتابخانه
+   * @param {string} action
+   * @param {'own' | 'any'} type
+   * @returns {string}
+   * @memberof Util
+   * @static
+   */
   static identifyAction(action: string, type: 'own' | 'any'): string {
     switch (action) {
       case 'create':

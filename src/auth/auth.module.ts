@@ -10,6 +10,10 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 import { AuthGuard } from './guards/auth.guard';
 import { AccessGuard } from './guards/access.guard';
 
+/**
+ * ماژول احراز هویت
+ * @module AuthModule
+ */
 @Module({
   imports: [
     PassportModule,

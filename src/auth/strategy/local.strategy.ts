@@ -3,6 +3,14 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
 
+/**
+ * local استراتژی.
+ * @class LocalStrategy
+ * @extends {PassportStrategy(Strategy)}
+ * @property {function} validate - فانکشن اعتبار سنجی
+ * @property {string} usernameField - نام فیلد نام کاربری
+ * @method validate - متد اعتبار سنجی
+ */
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {

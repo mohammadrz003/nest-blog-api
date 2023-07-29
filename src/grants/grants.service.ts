@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateGrantDto } from './dto/update-grant.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Grant as GrantModel } from '@prisma/client';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { GrantCreatedEvent } from './events/grant-created.event';
 import { InjectRolesBuilder, RolesBuilder } from 'nest-access-control';
 import { Util } from 'src/util';
 
+/**
+ * سرویس برای مدیریت دسترسی ها
+ * @class GrantsService
+ * @property {PrismaService} prismaService
+ * @property {EventEmitter2} eventEmitter
+ * @property {RolesBuilder} rolesBuilder
+ * @module GrantsService
+ */
 @Injectable()
 export class GrantsService {
   constructor(
@@ -15,6 +22,15 @@ export class GrantsService {
     @InjectRolesBuilder() private readonly rolesBuilder: RolesBuilder,
   ) {}
 
+  /**
+   * ایجاد دسترسی جدید
+   * @param {Prisma.GrantCreateInput} createGrantDto
+   * @param {string} roleName
+   * @memberof GrantsService
+   * @method create
+   * @public
+   * @returns {Promise<GrantModel>}
+   */
   async create(createGrantDto: Prisma.GrantCreateInput, roleName: string) {
     const createdGrant = await this.prismaService.grant.create({
       data: createGrantDto,
@@ -31,14 +47,38 @@ export class GrantsService {
     return createdGrant;
   }
 
+  /**
+   * دریافت تمامی دسترسی ها
+   * @memberof GrantsService
+   * @method findAll
+   * @public
+   * @returns {Promise<GrantModel[]>}
+   */
   findAll() {
-    return `This action returns all grants`;
+    return this.prismaService.grant.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} grant`;
+  /**
+   * دریافت دسترسی با شناسه
+   * @param {number} id
+   * @memberof GrantsService
+   * @method findOne
+   * @public
+   * @returns {Promise<GrantModel>}
+   */
+  findOne(id: string) {
+    return this.prismaService.grant.findUnique({ where: { id } });
   }
 
+  /**
+   * دریافت دسترسی با شناسه نقش
+   * @param {string} roleId
+   * @param {string} resource
+   * @memberof GrantsService
+   * @method findByRole
+   * @public
+   * @returns {Promise<GrantModel[]>}
+   */
   findByResource(roleId: string, resource: string) {
     return this.prismaService.grant.findMany({
       where: {
@@ -48,14 +88,42 @@ export class GrantsService {
     });
   }
 
-  update(id: number, updateGrantDto: UpdateGrantDto) {
-    return `This action updates a #${id} grant`;
+  /**
+   * بروزرسانی دسترسی با شناسه
+   * @param {string} id
+   * @param {UpdateGrantDto} updateGrantDto
+   * @memberof GrantsService
+   * @method update
+   * @public
+   * @returns {Promise<GrantModel>}
+   */
+  update(id: string, updateGrantDto: Prisma.GrantUpdateInput) {
+    return this.prismaService.grant.update({
+      data: updateGrantDto,
+      where: { id },
+    });
   }
 
-  remove(id: number) {
+  /**
+   * حذف دسترسی با شناسه
+   * @param {number} id
+   * @memberof GrantsService
+   * @method remove
+   * @public
+   * @returns {Promise<void>}
+   */
+  remove(id: string) {
     return `This action removes a #${id} grant`;
   }
 
+  /**
+   * رویداد ایجاد دسترسی
+   * @param {GrantCreatedEvent} payload
+   * @memberof GrantsService
+   * @method handleGrantCreatedEvent
+   * @public
+   * @returns {Promise<void>}
+   */
   @OnEvent('grant.created')
   async handleGrantCreatedEvent(payload: GrantCreatedEvent) {
     const splitedAction = payload.action.split(':') as [string, 'any' | 'own'];
